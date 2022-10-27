@@ -1,8 +1,19 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import "antd/dist/antd.css";
+import type { AppProps } from "next/app";
+import Head from "next/head";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-}
+import { wrapper } from "../store/store";
 
-export default MyApp
+const App = ({ Component }: AppProps) => {
+  return (
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <title>My TODO List APP</title>
+      </Head>
+      <Component />
+    </>
+  );
+};
+
+export default wrapper.withRedux(App);
