@@ -1,6 +1,7 @@
 import { Button, DatePicker, Form, Input } from "antd";
 import Title from "antd/lib/typography/Title";
 import moment from "moment";
+import Router from "next/router";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
@@ -8,45 +9,55 @@ import { EDIT_TODO } from "../reducers/todo";
 import { MODIFY_DONE } from "../reducers/user";
 
 const ModifyForm = () => {
+  const { modifyData } = useSelector((state: RootState) => state.user);
+  useEffect(() => {
+    if (!(modifyData && modifyData.id)) {
+      Router.push("/");
+    }
+  }, [modifyData && modifyData.id]);
+
+  useEffect(() => {
+    if (modifyData) {
+      form.setFieldsValue({
+        title: modifyData.title,
+        content: modifyData.content,
+      });
+      if (modifyData.date !== "무기한") {
+        form.setFieldValue("date_picker", moment(modifyData.date));
+      }
+    }
+  });
+
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const { modifyData } = useSelector((state: RootState) => state.user);
-
-  useEffect(() => {
-    form.setFieldsValue({
-      title: modifyData.title,
-      content: modifyData.content,
-    });
-    if (modifyData.date !== "무기한") {
-      form.setFieldValue("date_picker", moment(modifyData.date));
-    }
-  });
+  if (!modifyData) {
+    return null;
+  }
 
   const onCancelClicked = (e: any) => {
     dispatch({ type: MODIFY_DONE });
   };
 
-  const onSubmit = useCallback(
-    (values: any) => {
-      dispatch({
-        type: EDIT_TODO,
-        data: {
-          id: modifyData.id,
-          title: values.title,
-          content: values.content,
-          // date 오류 수정 필요
-          date: values.date_picker
-            ? values.date_picker.format("YYYY-MM-DD")
-            : "무기한",
-          isFinished: modifyData.isFinished,
-        },
-      });
-      form.resetFields();
-      dispatch({ type: MODIFY_DONE });
-    },
-    [dispatch, form, modifyData.id, modifyData.isFinished]
-  );
+  const onSubmit = (values: any) => {
+    dispatch({
+      type: EDIT_TODO,
+      data: {
+        id: modifyData.id,
+        title: values.title,
+        content: values.content,
+        // date 오류 수정 필요
+        date: values.date_picker
+          ? values.date_picker.format("YYYY-MM-DD")
+          : "무기한",
+        isFinished: modifyData.isFinished,
+        writer: modifyData.writer,
+        writerId: modifyData.writerId,
+      },
+    });
+    form.resetFields();
+    dispatch({ type: MODIFY_DONE });
+  };
 
   return (
     <>

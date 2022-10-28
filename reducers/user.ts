@@ -28,7 +28,7 @@ export const initialState: UserState = {
   isLoginError: false,
 };
 
-type UserState = {
+export type UserState = {
   user: UserData | null;
   users: Array<UserData>;
   isModifying: boolean;

@@ -1,7 +1,7 @@
 import { AnyAction } from "@reduxjs/toolkit";
 import moment from "moment";
 
-type TodoState = {
+export type TodoState = {
   mainTodos: Array<TodoData>;
   loadTodoLoading: boolean;
   loadTodoDone: boolean;

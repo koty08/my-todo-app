@@ -1,12 +1,11 @@
-import { Form, Input, Button, Alert } from "antd";
-import { useRouter } from "next/router";
+import { Form, Input, Button } from "antd";
+import Router from "next/router";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { ADD_USER } from "../reducers/user";
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [form] = Form.useForm();
   const onSubmit = useCallback(
     (values: any) => {
@@ -18,11 +17,9 @@ const SignUpForm = () => {
           nickname: values.nickname ?? "닉네임",
         },
       });
-      //   router.push({
-      //     pathname: "/",
-      //   });
+      Router.push("/");
     },
-    [dispatch, router]
+    [dispatch]
   );
 
   return (

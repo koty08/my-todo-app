@@ -1,6 +1,7 @@
 import { Button, DatePicker, Form, Input } from "antd";
 import Title from "antd/lib/typography/Title";
-import React, { useCallback } from "react";
+import Router from "next/router";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import shortId from "shortid";
 import { RootState } from "../reducers";
@@ -12,26 +13,32 @@ const CreateForm = () => {
   const [form] = Form.useForm();
   const { user } = useSelector((state: RootState) => state.user);
 
-  const onSubmit = useCallback(
-    (values: any) => {
-      // console.log(values.text, values["date-picker"].format("YYYY-MM-DD"));
-      dispatch(
-        addTODO({
-          id: shortId.generate(),
-          title: values.title,
-          content: values.content,
-          date: values.date_picker
-            ? values.date_picker.format("YYYY-MM-DD")
-            : "무기한",
-          isFinished: false,
-          writer: user.nickname,
-          writerId: user.id,
-        })
-      );
-      form.resetFields();
-    },
-    [form, dispatch, user.id, user.nickname]
-  );
+  useEffect(() => {
+    if (!(user && user.id)) {
+      Router.push("/");
+    }
+  }, [user && user.id]);
+  if (!user) {
+    return null;
+  }
+
+  const onSubmit = (values: any) => {
+    // console.log(values.text, values["date-picker"].format("YYYY-MM-DD"));
+    dispatch(
+      addTODO({
+        id: shortId.generate(),
+        title: values.title,
+        content: values.content,
+        date: values.date_picker
+          ? values.date_picker.format("YYYY-MM-DD")
+          : "무기한",
+        isFinished: false,
+        writer: user.nickname,
+        writerId: user.id,
+      })
+    );
+    form.resetFields();
+  };
 
   return (
     <>

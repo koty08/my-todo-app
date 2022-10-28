@@ -56,7 +56,7 @@ const MyLayout = ({ children, mode }: Props) => {
             border: "0px",
           }}
         >
-          <span>{user.nickname}님, 안녕하세요! </span>
+          <span>{user?.nickname}님, 안녕하세요! </span>
           <Button onClick={logOutClicked}>로그아웃</Button>
         </div>
       ),

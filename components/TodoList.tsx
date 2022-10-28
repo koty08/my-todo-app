@@ -1,6 +1,7 @@
 import { Checkbox, List } from "antd";
 import Title from "antd/lib/typography/Title";
 import moment from "moment";
+import Router from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -36,12 +37,21 @@ const TodoList = ({ mode }: Props) => {
       if (mode == "my") {
         // 현재 관리중인 백엔드가 없어서 mainTodo가 덮어씌워짐
         // dispatch({ type: LOAD_TODO_ME_LOADING, data: user.id });
-        mainTodos.filter((e) => e.writerId === user.id);
+        // mainTodos.filter((e) => e.writerId === user.id);
       } else {
         dispatch({ type: LOAD_TODO_LOADING });
       }
     }
-  }, [dispatch, isLoggedIn, mainTodos, mode, user.id]);
+  }, [dispatch, isLoggedIn, mode]);
+
+  useEffect(() => {
+    if (!(user && user.id)) {
+      Router.push("/");
+    }
+  }, [user && user.id]);
+  if (!user) {
+    return null;
+  }
 
   const onDeleteSubmit = (id: string, e: any) => {
     dispatch(delTODO(id));
@@ -65,6 +75,8 @@ const TodoList = ({ mode }: Props) => {
     return moment().isAfter(moment(comp));
   };
 
+  if (user != null) {
+  }
   return (
     <>
       <Title level={3}>{"완료 되지 않은 TODO"}</Title>
